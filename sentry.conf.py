@@ -6,6 +6,7 @@ from sentry.conf.server import *
 import os
 from django.core.exceptions import ImproperlyConfigured
 from unipath import Path
+import dj_database_url
 
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
@@ -17,28 +18,7 @@ def get_env_variable(var_name):
 
 CONF_ROOT = os.path.dirname(__file__)
 
-DATABASES = {
-    'default': {
-        # You can swap out the engine for MySQL easily by changing this value
-        # to ``django.db.backends.mysql`` or to PostgreSQL with
-        # ``django.db.backends.postgresql_psycopg2``
-
-        # If you change this, you'll also need to install the appropriate python
-        # package: psycopg2 (Postgres) or mysql-python
-        'ENGINE': 'django.db.backends.sqlite3',
-
-        'NAME': os.path.join(CONF_ROOT, 'sentry.db'),
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-
-        # If you're using Postgres, we recommend turning on autocommit
-        # 'OPTIONS': {
-        #     'autocommit': True,
-        # }
-    }
-}
+DATABASES['default'] = dj_database_url.config()
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # If you're expecting any kind of real traffic on Sentry, we highly recommend
@@ -106,7 +86,7 @@ SENTRY_URL_PREFIX = 'http://sentry.example.com'  # No trailing slash!
 SENTRY_WEB_HOST = '0.0.0.0'
 SENTRY_WEB_PORT = 9000
 SENTRY_WEB_OPTIONS = {
-    'workers': 3,  # the number of gunicorn workers
+    'workers': 1,  # the number of gunicorn workers
     'secure_scheme_headers': {'X-FORWARDED-PROTO': 'https'},
 }
 
